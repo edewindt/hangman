@@ -2,7 +2,7 @@
 	// The state for the game will consist of the word to be guessed,
 	// the letters that have been guessed, and the number of incorrect
 	// guesses that have been made.
-	let word = 'really cool';
+	let word = '';
 	let letters = [];
 	let incorrectGuesses = 0;
 
@@ -10,6 +10,7 @@
 	// pressing a letter key. It will update the state of the game
 	// based on whether the guess was correct or not.
 	const handleKeyPress = (event) => {
+		if (!start) return;
 		// Get the letter that was pressed.
 		const letter = event.key;
 
@@ -36,10 +37,10 @@
 	// This function will be called to render the word being guessed,
 	// with underscores representing unguessed letters and correctly
 	// guessed letters being shown in their correct positions.
-	const renderWord = (lets) => {
+	const renderWord = (lets, wrd) => {
 		// Create an array of letters for the word, with underscores
 		// representing unguessed letters.
-		const wordLetters = word.split('').map((letter) => {
+		const wordLetters = wrd.split('').map((letter) => {
 			if (lets.includes(letter)) {
 				// This letter has been guessed, so show it.
 				return letter;
@@ -54,12 +55,15 @@
 		return wordLetters.join(' ');
 	};
 
-	$: guessed = renderWord(letters);
+	$: guessed = renderWord(letters, word);
+	let start = false;
 </script>
 
 <!-- Listen for key presses on the document and call the handleKeyPress
        function when a letter key is pressed. -->
 <svelte:window on:keypress={handleKeyPress} />
+
+<input bind:value={word} /> <button>Start</button>
 
 <!-- Display the word being guessed. -->
 <p>{guessed}</p>
