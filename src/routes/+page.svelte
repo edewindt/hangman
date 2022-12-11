@@ -63,7 +63,11 @@
        function when a letter key is pressed. -->
 <svelte:window on:keypress={handleKeyPress} />
 
-<input bind:value={word} /> <button>Start</button>
+{#if !start}<input bind:value={word} />{:else} <p>{word}</p>{/if}<button
+	on:click={() => {
+		start = true;
+	}}>Start</button
+>
 
 <!-- Display the word being guessed. -->
 <p>{guessed}</p>
