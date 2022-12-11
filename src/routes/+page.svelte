@@ -6,10 +6,15 @@
 	let letters = [];
 	let incorrectGuesses = 0;
 
+	// The state for the game will also keep track of whether the game
+	// is over or not. This will be either true or false.
+	let gameOver = false;
+
 	// This function will be called when the user makes a guess by
 	// pressing a letter key. It will update the state of the game
 	// based on whether the guess was correct or not.
 	const handleKeyPress = (event) => {
+		if (gameOver) return;
 		if (!start) return;
 		// Get the letter that was pressed.
 		const letter = event.key;
@@ -27,6 +32,13 @@
 		if (word.includes(letter)) {
 			// The letter is in the word, so the guess is correct.
 			// We don't need to update the number of incorrect guesses.
+			// Check if all of the letters in the word have been correctly
+			// guessed. If they have, the player has won the game.
+			if (word.split('').every((l) => letters.includes(l))) {
+				// All of the letters have been correctly guessed, so the player
+				// has won the game. Update the gameOver state.
+				gameOver = true;
+			}
 		} else {
 			// The letter is not in the word, so the guess is incorrect.
 			// Increment the number of incorrect guesses.
@@ -63,7 +75,7 @@
        function when a letter key is pressed. -->
 <svelte:window on:keypress={handleKeyPress} />
 
-{#if !start}<input bind:value={word} />{:else} <p>{word}</p>{/if}<button
+{#if !start}<input bind:value={word} />{/if}<button
 	on:click={() => {
 		start = true;
 	}}>Start</button
@@ -74,3 +86,5 @@
 
 <!-- Display the number of incorrect guesses. -->
 <p>Incorrect guesses: {incorrectGuesses}</p>
+
+{#if gameOver}You won.{/if}
